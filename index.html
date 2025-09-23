@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Support Triage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+      /* Custom Styles */
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+      .form-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .form-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .form-card:hover {
+        transform: translateY(-5px);
+      }
+      .form-card .card-header {
+        background-color: transparent;
+        border-bottom: none;
+        padding-top: 2rem;
+      }
+      .btn-primary {
+        background-color: #667eea;
+        border: none;
+        padding: 0.75rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #5a6edc;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="container form-container">
+      <div class="col-lg-7">
+        <div class="card form-card">
+          <div class="card-header text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#667eea" class="bi bi-headset" viewBox="0 0 16 16">
+              <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/>
+            </svg>
+            <h3 class="mt-2">Submit a Support Ticket</h3>
+          </div>
+          <div class="card-body p-4 p-md-5">
+            <form>
+              <div class="mb-3">
+                <label for="userName" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="userName" placeholder="Enter your name">
+              </div>
+              <div class="mb-3">
+                <label for="userEmail" class="form-label">Your Email</label>
+                <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
+              </div>
+              <div class="mb-3">
+                <label for="issueDescription" class="form-label">Describe your issue in detail</label>
+                <textarea class="form-control" id="issueDescription" rows="4"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="formFile" class="form-label">Attach an Image (Optional)</label>
+                <input class="form-control" type="file" id="formFile">
+              </div>
+              <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Submit Ticket</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
