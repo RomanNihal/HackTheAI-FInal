@@ -1,72 +1,40 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-t">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Smart Support Triage</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
     <style>
-      /* Custom Styles */
-      body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      }
-      .form-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-      .form-card {
-        border: none;
-        border-radius: 1rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
-      }
-      .form-card:hover {
-        transform: translateY(-5px);
-      }
-      .form-card .card-header {
-        background-color: transparent;
-        border-bottom: none;
-        padding-top: 2rem;
-      }
-      .btn-primary {
-        background-color: #667eea;
-        border: none;
-        padding: 0.75rem;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-      }
-      .btn-primary:hover {
-        background-color: #5a6edc;
-      }
+      body {font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);}
+      .form-container {display: flex; align-items: center; justify-content: center; min-height: 100vh;}
+      .form-card {border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);}
+      .form-card .card-header {background-color: transparent; border-bottom: none; padding-top: 2rem;}
+      .btn-primary {background-color: #667eea; border: none; padding: 0.75rem; font-weight: 600;}
     </style>
   </head>
   <body>
-    
     <div class="container form-container">
       <div class="col-lg-7">
         <div class="card form-card">
           <div class="card-header text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#667eea" class="bi bi-headset" viewBox="0 0 16 16">
-              <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/>
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#667eea" class="bi bi-headset" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/></svg>
             <h3 class="mt-2">Submit a Support Ticket</h3>
+            <p class="text-muted">First, <a href="register.html">register a user</a> to get an ID.</p>
           </div>
           <div class="card-body p-4 p-md-5">
             <form id="ticketForm">
               <div class="mb-3">
-                <label for="userName" class="form-label">Your Name</label>
-                <input type="text" class="form-control" id="userName" name="user_name" placeholder="Enter your name" required>
-              </div>
-              <div class="mb-3">
-                <label for="userEmail" class="form-label">Your Email</label>
-                <input type="email" class="form-control" id="userEmail" name="user_email" placeholder="name@example.com" required>
+                <label for="userId" class="form-label">Your User ID</label>
+                <input type="number" class="form-control" id="userId" name="user_id" placeholder="Enter your User ID from registration" required>
               </div>
               <div class="mb-3">
                 <label for="issueDescription" class="form-label">Describe your issue in detail</label>
@@ -85,58 +53,27 @@
         </div>
       </div>
     </div>
-
     <script>
-      const form = document.getElementById('ticketForm');
-      const submitButton = document.getElementById('submitButton');
-      const resultDiv = document.getElementById('result');
-
-      form.addEventListener('submit', async (event) => {
-        // Prevent the default form submission (which reloads the page)
-        event.preventDefault();
-
-        // Show loading state
+      document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitButton = document.getElementById('submitButton');
+        const resultDiv = document.getElementById('result');
         submitButton.disabled = true;
-        submitButton.innerText = 'Analyzing...';
-        resultDiv.innerHTML = '';
-
-        // Create a FormData object from the form
-        const formData = new FormData(form);
-        
-        try {
-          // Use fetch to send the form data to your FastAPI backend
-          const response = await fetch('http://127.0.0.1:8000/submit-ticket', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const result = await response.json();
-          
-          // Display the result
-          resultDiv.innerHTML = `
-            <div class="alert alert-success">
-              <h5>Issue Submitted</h5>
-            </div>
-          `;
-          
-        } catch (error) {
-          console.error('Error:', error);
-          resultDiv.innerHTML = `
-            <div class="alert alert-danger">
-              <strong>Error:</strong> Could not submit ticket. Please check the console for details.
-            </div>
-          `;
-        } finally {
-          // Re-enable the button
-          submitButton.disabled = false;
-          submitButton.innerText = 'Submit Ticket';
+        submitButton.innerText = 'Submitting...';
+        const formData = new FormData(document.getElementById('ticketForm'));
+        const response = await fetch('http://127.0.0.1:8000/submit-ticket', {
+          method: 'POST',
+          body: formData,
+        });
+        if (response.ok) {
+          resultDiv.innerHTML = `<div class="alert alert-success">Ticket submitted successfully!</div>`;
+          // document.getElementById('ticketForm').reset();
+        } else {
+          resultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not submit ticket. Is the User ID correct?</div>`;
         }
+        submitButton.disabled = false;
+        submitButton.innerText = 'Submit Ticket';
       });
     </script>
-
   </body>
 </html>

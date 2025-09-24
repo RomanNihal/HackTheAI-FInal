@@ -4,13 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Dashboard</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
       body {font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);}
-      .stat-card {border: none; border-radius: 0.75rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);}
       .table-card {border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);}
       .table-hover tbody tr:hover {background-color: #f8f9fa; cursor: pointer;}
       .navbar {background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,.1);}
@@ -24,7 +28,10 @@
       <h1 class="mb-4">Dashboard</h1>
       <div class="card table-card">
         <div class="card-body">
-          <h4 class="card-title mb-3">Incoming Tickets</h4>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="card-title mb-0">Incoming Tickets</h4>
+            <button class="btn btn-sm btn-outline-primary" onclick="fetchTickets()">Refresh</button>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
@@ -36,47 +43,52 @@
         </div>
       </div>
     </div>
-
     <script>
-      function getPriorityBadge(priority) {
-        if (!priority) return '<span class="badge rounded-pill bg-secondary">N/A</span>';
-        const priorityLower = priority.toLowerCase();
-        if (priorityLower === 'high') return '<span class="badge rounded-pill bg-danger">High</span>';
-        if (priorityLower === 'medium') return '<span class="badge rounded-pill bg-warning">Medium</span>';
-        return '<span class="badge rounded-pill bg-success">Low</span>';
+      function createStatusDropdown(ticketId, currentStatus) {
+        const statuses = ['New', 'In Progress', 'Closed'];
+        const options = statuses.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${s}</option>`).join('');
+        return `<select class="form-select form-select-sm" onchange="updateStatus(${ticketId}, this.value)">${options}</select>`;
       }
 
-      document.addEventListener('DOMContentLoaded', async () => {
+      async function updateStatus(ticketId, newStatus) {
+        try {
+          await fetch(`http://127.0.0.1:8000/tickets/${ticketId}/status`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({status: newStatus})
+          });
+        } catch (error) {
+          console.error('Failed to update status:', error);
+          alert('Error updating status.');
+        }
+      }
+      
+      async function fetchTickets() {
         const tableBody = document.getElementById('ticket-table-body');
         try {
           const response = await fetch('http://127.0.0.1:8000/tickets');
           const tickets = await response.json();
-          
           tableBody.innerHTML = '';
-
           tickets.forEach(ticket => {
             const row = document.createElement('tr');
-            
-            // Directly access the clean analysis data
-            const category = ticket.ai_analysis.category || 'N/A';
-            const priority = ticket.ai_analysis.priority || 'Low';
-
             row.innerHTML = `
               <th scope="row">#${ticket.id}</th>
               <td>${ticket.user_name}</td>
               <td>${ticket.description}</td>
-              <td>${category}</td>
-              <td>${getPriorityBadge(priority)}</td>
-              <td>${ticket.status}</td>
+              <td>${ticket.category || 'N/A'}</td>
+              <td>${ticket.priority || 'N/A'}</td>
+              <td>${createStatusDropdown(ticket.id, ticket.status)}</td>
             `;
             tableBody.appendChild(row);
           });
-
         } catch (error) {
           console.error('Failed to fetch tickets:', error);
           tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Failed to load tickets. Is the backend server running?</td></tr>';
         }
-      });
+      }
+
+      // Load tickets when the page first opens
+      document.addEventListener('DOMContentLoaded', fetchTickets);
     </script>
   </body>
 </html>

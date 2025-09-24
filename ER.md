@@ -7,7 +7,6 @@ erDiagram
         int id PK
         string name
         string email
-        datetime created_at
     }
 
     SUPPORT_TICKET {
@@ -25,7 +24,5 @@ erDiagram
         string priority "High | Medium | Low"
         string category "Hardware | Billing | ..."
         float confidence_score
-        string warranty_status
-        datetime analyzed_at
     }
 ```
