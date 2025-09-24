@@ -8,123 +8,75 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
     <style>
-      /* Custom Styles */
-      body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      }
-      .stat-card {
-        border: none;
-        border-radius: 0.75rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      }
-      .table-card {
-        border: none;
-        border-radius: 1rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
-      .table-hover tbody tr:hover {
-        background-color: #f8f9fa;
-        cursor: pointer;
-      }
-      .navbar {
-          background-color: #ffffff;
-          box-shadow: 0 2px 4px rgba(0,0,0,.1);
-      }
+      body {font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);}
+      .stat-card {border: none; border-radius: 0.75rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);}
+      .table-card {border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);}
+      .table-hover tbody tr:hover {background-color: #f8f9fa; cursor: pointer;}
+      .navbar {background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,.1);}
     </style>
   </head>
   <body>
-
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#667eea" class="bi bi-headset me-2" viewBox="0 0 16 16">
-            <path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/>
-          </svg>
-          Smart Triage
-        </a>
-      </div>
+      <div class="container-fluid"><a class="navbar-brand fw-bold" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#667eea" class="bi bi-headset me-2" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/></svg>Smart Triage</a></div>
     </nav>
-    
     <div class="container mt-4">
       <h1 class="mb-4">Dashboard</h1>
-
-      <div class="row g-4 mb-4">
-        <div class="col-md-4">
-          <div class="card stat-card p-2">
-            <div class="card-body">
-              <h5 class="card-title text-muted">Total Tickets</h5>
-              <p class="card-text fs-2 fw-bold">3</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card stat-card p-2">
-            <div class="card-body">
-              <h5 class="card-title text-muted">High Priority</h5>
-              <p class="card-text fs-2 fw-bold text-danger">1</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card stat-card p-2">
-            <div class="card-body">
-              <h5 class="card-title text-muted">Pending Review</h5>
-              <p class="card-text fs-2 fw-bold text-warning">2</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="card table-card">
         <div class="card-body">
           <h4 class="card-title mb-3">Incoming Tickets</h4>
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
-                <tr>
-                  <th scope="col">Ticket ID</th>
-                  <th scope="col">User</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Category</th>
-                  <th scope="col">Priority</th>
-                  <th scope="col">Status</th>
-                </tr>
+                <tr><th scope="col">Ticket ID</th><th scope="col">User</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col">Priority</th><th scope="col">Status</th></tr>
               </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">#1024</th>
-                  <td>Nurul Huda</td>
-                  <td>My router is blinking red...</td>
-                  <td>Hardware</td>
-                  <td><span class="badge rounded-pill bg-danger">High</span></td>
-                  <td>New</td>
-                </tr>
-                <tr>
-                  <th scope="row">#1023</th>
-                  <td>Ataullah</td>
-                  <td>I have a question about my bill...</td>
-                  <td>Billing</td>
-                  <td><span class="badge rounded-pill bg-warning">Medium</span></td>
-                  <td>New</td>
-                </tr>
-                <tr>
-                  <th scope="row">#1022</th>
-                  <td>Junaeid</td>
-                  <td>How do I reset my password?</td>
-                  <td>Software</td>
-                  <td><span class="badge rounded-pill bg-success">Low</span></td>
-                  <td>In Progress</td>
-                </tr>
-              </tbody>
+              <tbody id="ticket-table-body"></tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function getPriorityBadge(priority) {
+        if (!priority) return '<span class="badge rounded-pill bg-secondary">N/A</span>';
+        const priorityLower = priority.toLowerCase();
+        if (priorityLower === 'high') return '<span class="badge rounded-pill bg-danger">High</span>';
+        if (priorityLower === 'medium') return '<span class="badge rounded-pill bg-warning">Medium</span>';
+        return '<span class="badge rounded-pill bg-success">Low</span>';
+      }
+
+      document.addEventListener('DOMContentLoaded', async () => {
+        const tableBody = document.getElementById('ticket-table-body');
+        try {
+          const response = await fetch('http://127.0.0.1:8000/tickets');
+          const tickets = await response.json();
+          
+          tableBody.innerHTML = '';
+
+          tickets.forEach(ticket => {
+            const row = document.createElement('tr');
+            
+            // Directly access the clean analysis data
+            const category = ticket.ai_analysis.category || 'N/A';
+            const priority = ticket.ai_analysis.priority || 'Low';
+
+            row.innerHTML = `
+              <th scope="row">#${ticket.id}</th>
+              <td>${ticket.user_name}</td>
+              <td>${ticket.description}</td>
+              <td>${category}</td>
+              <td>${getPriorityBadge(priority)}</td>
+              <td>${ticket.status}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+
+        } catch (error) {
+          console.error('Failed to fetch tickets:', error);
+          tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Failed to load tickets. Is the backend server running?</td></tr>';
+        }
+      });
+    </script>
   </body>
 </html>
