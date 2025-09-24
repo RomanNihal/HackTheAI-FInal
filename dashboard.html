@@ -8,13 +8,14 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
       body {font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);}
+      .stat-card {border: none; border-radius: 0.75rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);}
       .table-card {border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);}
       .table-hover tbody tr:hover {background-color: #f8f9fa; cursor: pointer;}
       .navbar {background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,.1);}
@@ -26,6 +27,34 @@
     </nav>
     <div class="container mt-4">
       <h1 class="mb-4">Dashboard</h1>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="card stat-card p-2">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Total Tickets</h5>
+              <p class="card-text fs-2 fw-bold" id="total-tickets-count">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card p-2">
+            <div class="card-body">
+              <h5 class="card-title text-muted">High Priority</h5>
+              <p class="card-text fs-2 fw-bold text-danger" id="high-priority-count">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card stat-card p-2">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Pending Review</h5>
+              <p class="card-text fs-2 fw-bold text-warning" id="pending-review-count">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="card table-card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -44,6 +73,14 @@
       </div>
     </div>
     <script>
+      function getPriorityBadge(priority) {
+        if (!priority) return '<span class="badge rounded-pill bg-secondary">N/A</span>';
+        const priorityLower = priority.toLowerCase();
+        if (priorityLower === 'high') return '<span class="badge rounded-pill bg-danger">High</span>';
+        if (priorityLower === 'medium') return '<span class="badge rounded-pill bg-warning">Medium</span>';
+        return '<span class="badge rounded-pill bg-success">Low</span>';
+      }
+
       function createStatusDropdown(ticketId, currentStatus) {
         const statuses = ['New', 'In Progress', 'Closed'];
         const options = statuses.map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${s}</option>`).join('');
@@ -69,6 +106,12 @@
           const response = await fetch('http://127.0.0.1:8000/tickets');
           const tickets = await response.json();
           tableBody.innerHTML = '';
+          
+          // Update Stat Cards
+          document.getElementById('total-tickets-count').innerText = tickets.length;
+          document.getElementById('high-priority-count').innerText = tickets.filter(t => t.priority && t.priority.toLowerCase() === 'high').length;
+          document.getElementById('pending-review-count').innerText = tickets.filter(t => t.status && t.status.toLowerCase() !== 'closed').length;
+
           tickets.forEach(ticket => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -76,7 +119,7 @@
               <td>${ticket.user_name}</td>
               <td>${ticket.description}</td>
               <td>${ticket.category || 'N/A'}</td>
-              <td>${ticket.priority || 'N/A'}</td>
+              <td>${getPriorityBadge(ticket.priority || 'N/A')}</td>
               <td>${createStatusDropdown(ticket.id, ticket.status)}</td>
             `;
             tableBody.appendChild(row);
@@ -87,7 +130,6 @@
         }
       }
 
-      // Load tickets when the page first opens
       document.addEventListener('DOMContentLoaded', fetchTickets);
     </script>
   </body>
