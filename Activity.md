@@ -6,7 +6,7 @@ graph LR
 
     %% User
     subgraph "User"
-        A([Submit Support Form]) --> B{Click 'Submit'}
+        A([Submit Form]) --> B{Click 'Submit'}
     end
 
     %% Frontend
@@ -17,18 +17,18 @@ graph LR
 
     %% Backend
     subgraph "Backend API"
-        C --> D[Receive Ticket Data]
+        C --> D[Receive Data]
         D --> E[Call SmythOS]
-        H[AI Analysis Received] --> I[Combine Ticket + AI]
+        H[AI Analysis Received] --> I[Ticket + AI]
         I --> J[Save to Database]
         J --> K
     end
 
     %% AI System
     subgraph "AI / SmythOS"
-        E ==> F[Run Triage Workflow<br>NLP + Vision + Rules]
-        F -.-> G[External API Enrichment]
-        G ==> H[Return JSON Analysis]
+        E ==> F[Run Workflow<br>NLP+Vision+Rules]
+        F -.-> G[External API]
+        G ==> H[Return JSON]
     end
 
     %% Styling for dark theme

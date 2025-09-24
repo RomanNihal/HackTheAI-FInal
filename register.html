@@ -60,7 +60,9 @@
             const data = await response.json();
             if (response.ok) {
                 resultDiv.innerHTML = `<div class="alert alert-success">User created! Your User ID is: <strong>${data.id}</strong>. Use this ID to submit tickets.</div>`;
-                // document.getElementById('registerForm').reset();
+                setTimeout(() => {
+                    document.getElementById('registerForm').reset();
+                }, 5000); // 5000 milliseconds = 5 seconds
             } else {
                 resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${data.detail || 'Could not register user.'}</div>`;
             }

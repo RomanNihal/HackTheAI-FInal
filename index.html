@@ -67,7 +67,9 @@
         });
         if (response.ok) {
           resultDiv.innerHTML = `<div class="alert alert-success">Ticket submitted successfully!</div>`;
-          // document.getElementById('ticketForm').reset();
+          setTimeout(() => {
+                    document.getElementById('registerForm').reset();
+                }, 5000); // 5000 milliseconds = 5 seconds
         } else {
           resultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not submit ticket. Is the User ID correct?</div>`;
         }
