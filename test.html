@@ -8,29 +8,35 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
       body {font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);}
       .stat-card {border: none; border-radius: 0.75rem; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);}
       .table-card {border: none; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);}
+      .table-hover tbody tr:hover {background-color: #f8f9fa; cursor: pointer;}
       .navbar {background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,.1);}
     </style>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-      <div class="container-fluid"><a class="navbar-brand fw-bold" href="#">Smart Triage</a></div>
+      <div class="container-fluid"><a class="navbar-brand fw-bold" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#667eea" class="bi bi-headset me-2" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a2.5 2.5 0 0 1-2.5 2.5H9.366a1 1 0 0 1-.866-.5L6 12H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1v1a5 5 0 0 0 10 0v-1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/></svg>Smart Triage</a></div>
     </nav>
     <div class="container mt-4">
       <h1 class="mb-4">Dashboard</h1>
+
       <div class="row g-4 mb-4">
         <div class="col-md-4"><div class="card stat-card p-2"><div class="card-body"><h5 class="card-title text-muted">Total Tickets</h5><p class="card-text fs-2 fw-bold" id="total-tickets-count">0</p></div></div></div>
         <div class="col-md-4"><div class="card stat-card p-2"><div class="card-body"><h5 class="card-title text-muted">High Priority</h5><p class="card-text fs-2 fw-bold text-danger" id="high-priority-count">0</p></div></div></div>
         <div class="col-md-4"><div class="card stat-card p-2"><div class="card-body"><h5 class="card-title text-muted">Pending Review</h5><p class="card-text fs-2 fw-bold text-warning" id="pending-review-count">0</p></div></div></div>
       </div>
+
       <div class="row g-4 mb-4">
         <div class="col-md-6"><div class="card stat-card p-2"><div class="card-body"><h5 class="card-title text-muted">Recorded (Last Hour)</h5><p class="card-text fs-2 fw-bold" id="recorded-count">0</p></div></div></div>
         <div class="col-md-6"><div class="card stat-card p-2"><div class="card-body"><h5 class="card-title text-muted">Solved (Last Hour)</h5><p class="card-text fs-2 fw-bold text-success" id="solved-count">0</p></div></div></div>
       </div>
+
       <div class="card table-card">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -40,7 +46,7 @@
           <div class="table-responsive">
             <table class="table table-hover align-middle">
               <thead class="table-light">
-                <tr><th>ID</th><th>User</th><th>Description</th><th>Category</th><th>Priority</th><th>Status</th></tr>
+                <tr><th scope="col">Ticket ID</th><th scope="col">User</th><th scope="col">Description</th><th scope="col">Category</th><th scope="col">Priority</th><th scope="col">Status</th></tr>
               </thead>
               <tbody id="ticket-table-body"></tbody>
             </table>
@@ -54,7 +60,9 @@
       async function updateStatus(id, s) { try { await fetch(`http://127.0.0.1:8000/tickets/${id}/status`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({status:s}) }); loadDashboardData(); } catch (e) { alert('Error updating status.'); } }
       
       async function loadDashboardData() {
+        const tableBody = document.getElementById('ticket-table-body');
         try {
+          // Fetch both sets of data at the same time
           const [ticketsRes, statsRes] = await Promise.all([
             fetch('http://127.0.0.1:8000/tickets'),
             fetch('http://127.0.0.1:8000/stats/last-hour')
@@ -62,16 +70,14 @@
           const tickets = await ticketsRes.json();
           const stats = await statsRes.json();
           
-          // Update Stat Cards with Corrected Logic
+          // Update All 5 Stat Cards
           document.getElementById('total-tickets-count').innerText = tickets.length;
-          // THE FIX IS HERE: Only count high priority tickets that are NOT closed.
-          document.getElementById('high-priority-count').innerText = tickets.filter(t => t.priority && t.priority.toLowerCase() === 'high' && t.status.toLowerCase() !== 'closed').length;
+          document.getElementById('high-priority-count').innerText = tickets.filter(t => t.priority && t.priority.toLowerCase() === 'high').length;
           document.getElementById('pending-review-count').innerText = tickets.filter(t => t.status && t.status.toLowerCase() !== 'closed').length;
           document.getElementById('recorded-count').innerText = stats.recorded_last_hour;
           document.getElementById('solved-count').innerText = stats.solved_last_hour;
           
           // Update Table
-          const tableBody = document.getElementById('ticket-table-body');
           tableBody.innerHTML = '';
           tickets.forEach(t => {
             const row = document.createElement('tr');
@@ -80,8 +86,10 @@
           });
         } catch (error) {
           console.error('Failed to load dashboard data:', error);
+          tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Failed to load data. Is the backend running?</td></tr>';
         }
       }
+
       document.addEventListener('DOMContentLoaded', loadDashboardData);
     </script>
   </body>

@@ -63,6 +63,7 @@
                 setTimeout(() => {
                     document.getElementById('registerForm').reset();
                 }, 5000); // 5000 milliseconds = 5 seconds
+                console.log("User created! Your User ID is:", data.id);
             } else {
                 resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${data.detail || 'Could not register user.'}</div>`;
             }

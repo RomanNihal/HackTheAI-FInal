@@ -22,7 +22,7 @@ def init_db():
             email TEXT NOT NULL UNIQUE
         )
     ''')
-    # Create Support Tickets Table - FIX: Added last_updated_at
+    # Create Support Tickets Table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS support_tickets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,7 +31,6 @@ def init_db():
             image_url TEXT,
             status TEXT NOT NULL,
             created_at TEXT NOT NULL,
-            last_updated_at TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
     ''')
@@ -54,6 +53,7 @@ def init_db():
 async def lifespan(app: FastAPI):
     init_db()
     yield
+    print("Server shutting down.")
 
 # --- FASTAPI APP ---
 app = FastAPI(lifespan=lifespan)
@@ -63,15 +63,20 @@ app.add_middleware(
 )
 
 # --- MODELS ---
-class User(BaseModel): name: str; email: str
-class TicketStatusUpdate(BaseModel): status: str
+class User(BaseModel):
+    name: str
+    email: str
+
+class TicketStatusUpdate(BaseModel):
+    status: str
 
 # --- CONFIGURATION ---
 SMYTHOS_API_URL = "https://cmfxt5dlf45v723qu5e621ogt.agent.pa.smyth.ai/api/triage_ticket"
 
 # --- ENDPOINTS ---
 @app.get("/")
-def read_root(): return {"message": "Smart Triage Backend is running with SQLite!"}
+def read_root():
+    return {"message": "Smart Triage Backend is running with SQLite!"}
 
 @app.post("/register")
 def register_user(user: User):
@@ -85,8 +90,8 @@ def register_user(user: User):
     except sqlite3.IntegrityError:
         raise HTTPException(status_code=400, detail="Email already registered.")
     finally:
-        # FIX: Removed the incorrect 'return' statement from the finally block
         conn.close()
+        return {"id": new_user_id, "name": user.name, "email": user.email}
 
 @app.get("/tickets")
 def get_tickets():
@@ -107,21 +112,31 @@ def get_tickets():
     conn.close()
     return tickets
 
+# --- NEW STATISTICS ENDPOINT ---
 @app.get("/stats/last-hour")
 def get_stats_last_hour():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     one_hour_ago = (datetime.datetime.now() - datetime.timedelta(hours=1)).isoformat()
+    
+    # Count tickets recorded in the last hour
     cursor.execute("SELECT COUNT(id) FROM support_tickets WHERE created_at >= ?", (one_hour_ago,))
     recorded_count = cursor.fetchone()[0]
-    # FIX: Query now works because last_updated_at column exists
+    
+    # Count tickets solved (status='Closed') in the last hour
     cursor.execute("SELECT COUNT(id) FROM support_tickets WHERE status = 'Closed' AND last_updated_at >= ?", (one_hour_ago,))
     solved_count = cursor.fetchone()[0]
+    
     conn.close()
     return {"recorded_last_hour": recorded_count, "solved_last_hour": solved_count}
 
+
 @app.post("/submit-ticket")
-async def submit_ticket(user_id: int = Form(...), ticket_text: str = Form(...), ticket_image: UploadFile = File(None)):
+async def submit_ticket(
+    user_id: int = Form(...),
+    ticket_text: str = Form(...), 
+    ticket_image: UploadFile = File(None)
+):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM users WHERE id = ?", (user_id,))
@@ -156,20 +171,22 @@ async def submit_ticket(user_id: int = Form(...), ticket_text: str = Form(...), 
         # --- Get the specific values from the clean_data dictionary ---
         category = clean_data.get('category')
         priority = clean_data.get('priority')
-
+        
+        # --- Insert into the database ---
         timestamp = datetime.datetime.now().isoformat()
-        # FIX: Added last_updated_at on creation
         cursor.execute(
-            "INSERT INTO support_tickets (user_id, description, status, created_at, last_updated_at) VALUES (?, ?, ?, ?, ?)",
-            (user_id, ticket_text, "New", timestamp, timestamp)
+            "INSERT INTO support_tickets (user_id, description, status, created_at) VALUES (?, ?, ?, ?)",
+            (user_id, ticket_text, "New", timestamp)
         )
         new_ticket_id = cursor.lastrowid
 
+        # Now, use the category and priority variables to insert into the ai_analysis table
         cursor.execute(
             "INSERT INTO ai_analysis (ticket_id, priority, category) VALUES (?, ?, ?)",
             (new_ticket_id, priority, category)
         )
         conn.commit()
+
         return {"id": new_ticket_id, "status": "Ticket created successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to process ticket: {e}")
@@ -180,9 +197,7 @@ async def submit_ticket(user_id: int = Form(...), ticket_text: str = Form(...), 
 def update_ticket_status(ticket_id: int, status_update: TicketStatusUpdate):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
-    timestamp = datetime.datetime.now().isoformat()
-    # FIX: Updates last_updated_at when status changes
-    cursor.execute("UPDATE support_tickets SET status = ?, last_updated_at = ? WHERE id = ?", (status_update.status, timestamp, ticket_id))
+    cursor.execute("UPDATE support_tickets SET status = ? WHERE id = ?", (status_update.status, ticket_id))
     conn.commit()
     if cursor.rowcount == 0:
         conn.close()
@@ -192,7 +207,3 @@ def update_ticket_status(ticket_id: int, status_update: TicketStatusUpdate):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-# http://127.0.0.1:8000
-
-# SMYTHOS_API_URL = "https://cmfxt5dlf45v723qu5e621ogt.agent.pa.smyth.ai/api/triage_ticket"
