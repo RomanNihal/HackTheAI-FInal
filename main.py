@@ -67,7 +67,7 @@ class User(BaseModel): name: str; email: str
 class TicketStatusUpdate(BaseModel): status: str
 
 # --- CONFIGURATION ---
-SMYTHOS_API_URL = "https://cmfxt5dlf45v723qu5e621ogt.agent.pa.smyth.ai/api/triage_ticket"
+SMYTHOS_API_URL = ""
 
 # --- ENDPOINTS ---
 @app.get("/")
@@ -192,7 +192,3 @@ def update_ticket_status(ticket_id: int, status_update: TicketStatusUpdate):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-# http://127.0.0.1:8000
-
-# SMYTHOS_API_URL = "https://cmfxt5dlf45v723qu5e621ogt.agent.pa.smyth.ai/api/triage_ticket"

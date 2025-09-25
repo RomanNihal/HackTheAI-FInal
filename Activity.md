@@ -35,13 +35,10 @@ graph LR
     style A fill:#003366,stroke:#66B2FF,color:#FFFFFF,stroke-width:2px
     style B fill:#003366,stroke:#66B2FF,color:#FFFFFF,stroke-width:2px
     style L fill:#003366,stroke:#66B2FF,color:#FFFFFF,stroke-width:2px
-
     style C fill:#145A32,stroke:#28A745,color:#FFFFFF,stroke-width:2px
     style K fill:#145A32,stroke:#28A745,color:#FFFFFF,stroke-width:2px
-
     style D fill:#7B3F00,stroke:#FF8C00,color:#FFFFFF,stroke-width:2px
     style J fill:#7B3F00,stroke:#FF8C00,color:#FFFFFF,stroke-width:2px
-
     style E fill:#3C1361,stroke:#9D4EDD,color:#FFFFFF,stroke-width:2px
     style F fill:#3C1361,stroke:#9D4EDD,color:#FFFFFF,stroke-width:2px
     style G fill:#3C1361,stroke:#9D4EDD,color:#FFFFFF,stroke-width:2px

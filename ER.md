@@ -8,7 +8,6 @@ erDiagram
         string name
         string email
     }
-
     SUPPORT_TICKET {
         int id PK
         int user_id FK
@@ -17,7 +16,6 @@ erDiagram
         string status "new | in_progress | closed"
         datetime created_at
     }
-
     AI_ANALYSIS {
         int id PK
         int ticket_id FK

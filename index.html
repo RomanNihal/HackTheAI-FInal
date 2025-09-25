@@ -70,6 +70,7 @@
           setTimeout(() => {
                     document.getElementById('registerForm').reset();
                 }, 5000); // 5000 milliseconds = 5 seconds
+                console.log("Ticket submitted successfully!");
         } else {
           resultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not submit ticket. Is the User ID correct?</div>`;
         }
